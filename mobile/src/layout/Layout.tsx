@@ -7,13 +7,15 @@ interface ILayout {
     children?: ReactNode
 }
 
-const stylesCenter:string = 'h-full w-full bg-white pt-16'
+const classCenter:string = 'h-full w-full bg-white pt-16'
 
 const Layout: FC<ILayout> = ({children, isScrollView}) => {
 
     return (
-        <SafeAreaView className={stylesCenter}>
+        <SafeAreaView className={classCenter}>
             {isScrollView ? <ScrollView>{children}</ScrollView>: children}
         </SafeAreaView>
     )
 }
+
+export {Layout, classCenter}

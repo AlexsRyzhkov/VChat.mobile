@@ -1,5 +1,4 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useLoginForm } from "./loginStore";
 import { classCenter } from "../../layout/Layout";
 import { View, Text, Pressable } from "react-native";
 import { Loader } from "../../component/Loader";
@@ -8,20 +7,22 @@ import { Button } from "../../component/Button";
 import { FC, useEffect } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { IRootStackRouter } from "../../router/AppRouter";
+import { useRegisterForm } from "./registerStore";
 
-type ILoginScreen = NativeStackScreenProps<IRootStackRouter, "Login">
+type IRegisterScreen = NativeStackScreenProps<IRootStackRouter, "Register">
 
-const LoginScreen: FC<ILoginScreen> = ({ navigation }) => {
+const RegisterScreen: FC<IRegisterScreen> = ({ navigation }) => {
 
-    const { login, password } = useLoginForm()
-    const { changeState, reset } = useLoginForm()
-    const isLoading = false
+    const { name, surname, login, password } = useRegisterForm()
+    const { changeState, reset } = useRegisterForm()
+
+    const { isLoading } = useRegisterForm()
 
     const authHandler = () => {
-        
+
     }
 
-    useEffect(reset, [])
+    useEffect(reset, [navigation])
 
     return (
         <SafeAreaView className={classCenter}>
@@ -30,12 +31,14 @@ const LoginScreen: FC<ILoginScreen> = ({ navigation }) => {
                     <Text className='text-center text-gray-800 text-2xl font-bold mb-2'>Вход</Text>
                     {isLoading ? <Loader/> : (
                         <>
-                            <Input onChange={(val) => changeState({ login: val })} val={login} placeholder={"Логин"} isSecure={false}/>
-                            <Input onChange={(val) => changeState({ password: val })} val={password} placeholder={"Пароль"} isSecure={true}/>
-                            <Button onPress={authHandler} title={'Войти'}/>
-                            <Pressable onPress={() => navigation.replace("Register")}>
+                            <Input onChange={val => changeState({ name: val })} val={name} placeholder={"Имя"}/>
+                            <Input onChange={val => changeState({ surname: val })} val={surname} placeholder={"Фамилия"}/>
+                            <Input onChange={val => changeState({ login: val })} val={login} placeholder={"Логин"}/>
+                            <Input onChange={val => changeState({ password: val })} val={password} placeholder={"Пароль"} isSecure={true}/>
+                            <Button onPress={authHandler} title={'Зарегистрироваться'}/>
+                            <Pressable onPress={() => navigation.replace("Login")}>
                                 <Text className={'text-gray-800 opacity-30 text-right text-sm'}>
-                                    Регистрация
+                                    Войти
                                 </Text>
                             </Pressable>
                         </>
@@ -46,4 +49,4 @@ const LoginScreen: FC<ILoginScreen> = ({ navigation }) => {
     )
 }
 
-export { LoginScreen }
+export { RegisterScreen }
