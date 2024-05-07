@@ -1,5 +1,5 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { classCenter } from "../../layout/Layout";
+import { classCenter } from "../../const/styles";
 import { View, Text, Pressable } from "react-native";
 import { Loader } from "../../component/Loader";
 import { Input } from "../../component/Input";
@@ -19,7 +19,7 @@ const RegisterScreen: FC<IRegisterScreen> = ({ navigation }) => {
     const { isLoading } = useRegisterForm()
 
     const authHandler = () => {
-
+        navigation.replace('Home')
     }
 
     useEffect(reset, [navigation])

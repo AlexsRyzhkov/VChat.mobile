@@ -1,6 +1,6 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLoginForm } from "./loginStore";
-import { classCenter } from "../../layout/Layout";
+import { classCenter } from "../../const/styles";
 import { View, Text, Pressable } from "react-native";
 import { Loader } from "../../component/Loader";
 import { Input } from "../../component/Input";
@@ -18,7 +18,7 @@ const LoginScreen: FC<ILoginScreen> = ({ navigation }) => {
     const isLoading = false
 
     const authHandler = () => {
-        
+        navigation.replace('Home')
     }
 
     useEffect(reset, [])

@@ -1,16 +1,16 @@
-import {FC} from "react";
-import {Text, TouchableHighlight} from "react-native";
+import { FC } from "react";
+import { Text, TouchableHighlight } from "react-native";
 
-interface IButton{
-    onPress: ()=>void;
+interface IButton {
+    onPress: () => void;
     title: string;
     colors?: [string, string]
 }
 
-const Button:FC<IButton> = ({
+const Button: FC<IButton> = ({
     onPress,
     title,
-    colors = ['bg-yellow-300', '#fab619'],
+    colors = ['bg-yellow-400', '#fab619'],
 }) => {
     return (
         <TouchableHighlight
@@ -23,4 +23,4 @@ const Button:FC<IButton> = ({
     )
 }
 
-export {Button}
+export { Button }
