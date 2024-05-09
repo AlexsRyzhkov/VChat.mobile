@@ -13,16 +13,12 @@ type ErrorState = {
     }
 }
 
-type LoadingState = {
-    isLoading: boolean
-}
-
 type Actions = {
     changeState: (fieldsToUpdate: Partial<State>) => void
     reset: () => void
 }
 
-type LoginFormState = State & ErrorState & LoadingState
+type LoginFormState = State & ErrorState
 
 const DEFAULT_PROPS: LoginFormState = {
     login: "",
@@ -31,7 +27,6 @@ const DEFAULT_PROPS: LoginFormState = {
         login: "",
         password: ""
     },
-    isLoading: false
 }
 
 export const useLoginForm = create<LoginFormState & Actions>()(immer((set) => ({

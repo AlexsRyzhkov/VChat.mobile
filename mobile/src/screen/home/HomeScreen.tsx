@@ -6,7 +6,8 @@ import {SafeAreaView} from "react-native-safe-area-context";
 import { Loader } from "../../component/Loader";
 import { UserCard } from "../../component/UserCard";
 import {Modal} from "../../component/Modal";
-
+import * as SecureStore from 'expo-secure-store';
+import {useAuthStore} from "../../context/auth/AuthStore";
 
 type IHomeScreen = NativeStackScreenProps<IRootStackRouter, "Home">
 
@@ -75,14 +76,32 @@ const HomeScreen: FC<IHomeScreen> = ({ navigation }) => {
 
     const [isLoading, setLoading] = useState(false)
     const [open, setOpen] = useState(false)
+    const {setUserID} = useAuthStore()
+
+    const [callUser, setCallUser] = useState()
+
 
     return (
         <SafeAreaView className={'h-full'} style={{ backgroundColor: '#e2e8f0' }}>
-            <View className={'py-5 px-4 flex-row justify-between bor'}>
-                <Text className={'text-2xl font-semibold #313132'}>Контакты</Text>
+            <View>
+                <View className={'py-5 px-4 flex-row justify-between bor'}>
+                    <Text className={'text-2xl font-semibold #313132'}>Контакты</Text>
+                    <TouchableHighlight
+                        underlayColor={'#fab619'}
+                        className={'bg-amber-300 flex justify-center py-2.5 px-4 rounded-xl'}
+                        onPress={() => {
+                            SecureStore.deleteItemAsync('access_token')
+                            SecureStore.deleteItemAsync('refresh_token')
+                            setUserID(0)
+                        }}
+                    >
+                        <Text className={'font-semibold'}>Выйти</Text>
+                    </TouchableHighlight>
+                </View>
+
                 <TouchableHighlight
                     underlayColor={'#fab619'}
-                    className={'bg-amber-300 flex justify-center py-2.5 px-4 rounded-xl'}
+                    className={'bg-amber-300 flex justify-center py-2.5 px-4 mb-1'}
                     onPress={() => {
                         setLoading(true)
                         setTimeout(() => setLoading(false), 1000)

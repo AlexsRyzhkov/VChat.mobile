@@ -15,7 +15,6 @@ const CallScreen: FC<ICallScreen> = ({navigation}) => {
         isCalling: true
     }
 
-
     return (
         <SafeAreaView className={'w-full h-full'}>
             <View className={'w-full h-full bg-[#0e2337] pt-20'}>

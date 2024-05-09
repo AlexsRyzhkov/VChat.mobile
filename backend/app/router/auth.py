@@ -40,7 +40,7 @@ async def login(loginForm: LoginForm, async_session: AsyncSession = Depends(get_
     user = result.one_or_none()
 
     if not user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Неверный логин или пароль')
+        return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={'message': 'Неверный логин или пароль'})
 
     return JSONResponse(content=create_response(user), status_code=status.HTTP_200_OK)
 
@@ -54,7 +54,7 @@ async def register(registerForm: RegisterForm, async_session: AsyncSession = Dep
 
     userIsExist = user.one_or_none()
     if userIsExist:
-        raise HTTPException(status_code=400, detail='Такой логин существует')
+        return  JSONResponse(status_code=400, content={'message': 'Неверный логин или пароль'})
 
     hashedPassword = PSW.hash_password(registerForm.password)
 

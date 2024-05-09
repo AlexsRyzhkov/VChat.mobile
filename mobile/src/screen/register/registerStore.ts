@@ -17,16 +17,13 @@ type ErrorState = {
     }
 }
 
-type LoadingState = {
-    isLoading: boolean
-}
 
 type Actions = {
     changeState: (fieldsToUpdate: Partial<State>) => void
     reset: () => void
 }
 
-type RegisterFormState = State & ErrorState & LoadingState
+type RegisterFormState = State & ErrorState
 
 const DEFAULT_PROPS: RegisterFormState = {
     name: "",
@@ -39,7 +36,6 @@ const DEFAULT_PROPS: RegisterFormState = {
         login: "",
         password: ""
     },
-    isLoading: false
 }
 
 export const useRegisterForm = create<RegisterFormState & Actions>()(immer((set) => ({

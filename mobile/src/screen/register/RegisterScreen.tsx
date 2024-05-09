@@ -4,10 +4,13 @@ import { View, Text, Pressable } from "react-native";
 import { Loader } from "../../component/Loader";
 import { Input } from "../../component/Input";
 import { Button } from "../../component/Button";
-import { FC, useEffect } from "react";
+import {FC, useEffect, useState} from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { IRootStackRouter } from "../../router/AppRouter";
 import { useRegisterForm } from "./registerStore";
+import $api from "../../http";
+import * as SecureStore from "expo-secure-store";
+import {useAuthStore} from "../../context/auth/AuthStore";
 
 type IRegisterScreen = NativeStackScreenProps<IRootStackRouter, "Register">
 
@@ -16,12 +19,22 @@ const RegisterScreen: FC<IRegisterScreen> = ({ navigation }) => {
     const { name, surname, login, password } = useRegisterForm()
     const { changeState, reset } = useRegisterForm()
 
-    const { isLoading } = useRegisterForm()
+    const [isLoading, setLoading] = useState(false)
+    const {setUserID} = useAuthStore()
+    const authHandler = async () => {
+        setLoading(true)
+        try{
+            const response = await $api.post('/register', {name, surname,login,password})
 
-    const authHandler = () => {
-        navigation.replace('Home')
+            setUserID(response.data['user']['id'])
+            SecureStore.setItem('access_token',response.data['access_token'])
+            SecureStore.setItem('refresh_token', response.data['refresh_token'])
+
+        }catch(e){
+            setLoading(false)
+            console.log(e)
+        }
     }
-
     useEffect(reset, [navigation])
 
     return (
