@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { IRootStackRouter } from "../../router/AppRouter";
-import { FC, useState } from "react";
+import {FC, useEffect, useRef, useState} from "react";
 import {  ScrollView, Text, TouchableHighlight, View } from "react-native";
 import {SafeAreaView} from "react-native-safe-area-context";
 import { Loader } from "../../component/Loader";
@@ -8,6 +8,8 @@ import { UserCard } from "../../component/UserCard";
 import {Modal} from "../../component/Modal";
 import * as SecureStore from 'expo-secure-store';
 import {useAuthStore} from "../../context/auth/AuthStore";
+import $api from "../../http";
+import {useWebSocket} from "../../hook/useWebSocket";
 
 type IHomeScreen = NativeStackScreenProps<IRootStackRouter, "Home">
 
@@ -65,21 +67,37 @@ const users = [
     },
 ]
 
-interface IUser {
+export interface IUser {
     id: number
     name: string,
     surname: string,
-    colorIcon: string
+    online: boolean
 }
 
 const HomeScreen: FC<IHomeScreen> = ({ navigation }) => {
 
     const [isLoading, setLoading] = useState(false)
     const [open, setOpen] = useState(false)
+    const [selectedUser, setSelectedUser] = useState<IUser>({} as IUser)
     const {setUserID} = useAuthStore()
 
-    const [callUser, setCallUser] = useState()
+    const [users, setUsers] =  useState<IUser[]>([])
 
+    const fetchUsers = async ()=>{
+        setLoading(true)
+        try{
+            const response = await $api.get('/users')
+            const users = response.data.users as IUser[]
+            setUsers(users)
+            setLoading(false)
+        }catch (e:any){
+            console.log(e.message)
+        }
+    }
+
+    useEffect(()=>{
+        fetchUsers()
+    },[])
 
     return (
         <SafeAreaView className={'h-full'} style={{ backgroundColor: '#e2e8f0' }}>
@@ -102,10 +120,7 @@ const HomeScreen: FC<IHomeScreen> = ({ navigation }) => {
                 <TouchableHighlight
                     underlayColor={'#fab619'}
                     className={'bg-amber-300 flex justify-center py-2.5 px-4 mb-1'}
-                    onPress={() => {
-                        setLoading(true)
-                        setTimeout(() => setLoading(false), 1000)
-                    }}
+                    onPress={fetchUsers}
                 >
                     <Text className={'font-semibold'}>Обновить</Text>
                 </TouchableHighlight>
@@ -120,13 +135,17 @@ const HomeScreen: FC<IHomeScreen> = ({ navigation }) => {
                         <UserCard
                             userData={user}
                             key={user.id}
-                            onPress={() => {setOpen(true)}}/>
+                            onPress={() => {
+                                setSelectedUser(user)
+                                setOpen(true)
+                            }}/>
                     ))}
                 </ScrollView>
             )}
             <Modal
                 open={open}
-                closeModal={()=>setOpen(false)}
+                user={selectedUser}
+                onClose={()=>setOpen(false)}
                 onCall={()=>navigation.replace('Call')}
             />
         </SafeAreaView>

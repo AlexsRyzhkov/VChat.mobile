@@ -35,7 +35,7 @@ class JWToken:
     @staticmethod
     def verify_token(token: str):
         try:
-            claim = jwt.decode(token, JWT_SECRET, algorithms=['HS256'])
-            return claim['user_id']
-        except jwt.ExpiredSignatureError or jwt.InvalidTokenError:
+            claim = jwt.decode(token, JWT_SECRET, algorithms=['HS256'], options={"verify_signature": False})
+            return claim
+        except Exception as e:
             return None

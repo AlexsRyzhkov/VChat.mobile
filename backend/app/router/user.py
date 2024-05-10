@@ -2,7 +2,7 @@
 from typing import Annotated
 from fastapi import APIRouter, Depends, status, Header
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, and_
 from fastapi.responses import JSONResponse
 
 # local package
@@ -16,7 +16,8 @@ route = APIRouter()
 
 @route.get('/users')
 async def get_users(async_session: AsyncSession = Depends(get_async_session), user_id=Depends(get_current_user_id)):
-    query = select(User)
+    print(user_id)
+    query = select(User).filter(and_(User.id != user_id))
 
     result = await async_session.execute(query)
 

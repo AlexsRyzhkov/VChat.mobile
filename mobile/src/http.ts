@@ -23,7 +23,7 @@ $api.interceptors.response.use((response) => {
             SecureStore.setItem('access_token', response.data.access_token)
             return $api.request(originalRequest)
         } catch (e) {
-            SecureStore.deleteItemAsync('access_token')
+            await SecureStore.deleteItemAsync('access_token')
             console.log('Не авторизован');
         }
     }

@@ -40,7 +40,7 @@ async def login(loginForm: LoginForm, async_session: AsyncSession = Depends(get_
     user = result.one_or_none()
 
     if not user:
-        return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={'message': 'Неверный логин или пароль'})
+        return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={'message': 'Неверный логин или пароль12'})
 
     return JSONResponse(content=create_response(user), status_code=status.HTTP_200_OK)
 
@@ -69,3 +69,7 @@ async def register(registerForm: RegisterForm, async_session: AsyncSession = Dep
     await async_session.commit()
 
     return JSONResponse(content=create_response(user), status_code=status.HTTP_201_CREATED)
+
+@route.post('refresh')
+async def refresh():
+    pass

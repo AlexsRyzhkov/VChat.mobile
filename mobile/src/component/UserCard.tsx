@@ -6,7 +6,6 @@ interface IUserCard {
         id: number
         name: string,
         surname: string,
-        colorIcon: string,
         online: boolean
     },
     onPress: () => void,
@@ -14,7 +13,7 @@ interface IUserCard {
 
 const UserCard: FC<IUserCard> = ({ userData, onPress }) => {
 
-    const { name, surname, colorIcon, online } = userData
+    const { name, surname, online } = userData
 
     return (
         <TouchableHighlight

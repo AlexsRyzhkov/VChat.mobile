@@ -27,6 +27,7 @@ const RegisterScreen: FC<IRegisterScreen> = ({ navigation }) => {
             const response = await $api.post('/register', {name, surname,login,password})
 
             setUserID(response.data['user']['id'])
+            SecureStore.setItem('user_id',response.data['user']['id'].toString())
             SecureStore.setItem('access_token',response.data['access_token'])
             SecureStore.setItem('refresh_token', response.data['refresh_token'])
 
