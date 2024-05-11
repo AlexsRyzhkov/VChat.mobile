@@ -9,7 +9,6 @@ class User(Base):
     name: Mapped[str]
     surname: Mapped[str]
     login: Mapped[str]
-    online: Mapped[bool] = mapped_column(default=False)
     psw_hash: Mapped[str]
 
     def __repr__(self):

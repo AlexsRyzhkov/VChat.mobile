@@ -1,6 +1,6 @@
 # pip package
 from fastapi import FastAPI
-from app.router import auth_route, user_route, websocket_route
+from app.router import auth_route, user_route
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -19,4 +19,3 @@ app.add_middleware(
 
 app.include_router(auth_route)
 app.include_router(user_route)
-app.include_router(websocket_route)

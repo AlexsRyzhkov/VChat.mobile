@@ -1,5 +1,7 @@
 export type TypeRootStackParamList = {
     Login: undefined,
     Register: undefined,
-    UserList: undefined
+    Home: undefined,
+    Call: undefined,
+    InCall: undefined
 }

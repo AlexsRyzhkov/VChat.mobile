@@ -1,71 +1,18 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { IRootStackRouter } from "../../router/AppRouter";
-import {FC, useEffect, useRef, useState} from "react";
+import {FC, useEffect, useState} from "react";
 import {  ScrollView, Text, TouchableHighlight, View } from "react-native";
 import {SafeAreaView} from "react-native-safe-area-context";
 import { Loader } from "../../component/Loader";
 import { UserCard } from "../../component/UserCard";
 import {Modal} from "../../component/Modal";
 import * as SecureStore from 'expo-secure-store';
-import {useAuthStore} from "../../context/auth/AuthStore";
+import {useAuth} from "../../context/AuthContext";
 import $api from "../../http";
-import {useWebSocket} from "../../hook/useWebSocket";
+import {useStreamVideoClient} from "@stream-io/video-react-native-sdk";
+import {genRandomString} from "../../utils";
 
 type IHomeScreen = NativeStackScreenProps<IRootStackRouter, "Home">
-
-const users = [
-    {
-        id: 1,
-        name: "alexs",
-        surname: "petrenko",
-        colorIcon: "#12284f",
-        online: false
-    },
-    {
-        id: 2,
-        name: "dator",
-        surname: "nikson",
-        colorIcon: "#12284f",
-        online: true
-    },
-    {
-        id: 3,
-        name: "alexs",
-        surname: "petrenko",
-        colorIcon: "#12284f",
-        online: true
-    }, {
-        id: 4,
-        name: "alexs",
-        surname: "petrenko",
-        colorIcon: "#12284f",
-        online: true
-    }, {
-        id: 5,
-        name: "alexs",
-        surname: "petrenko",
-        colorIcon: "#12284f",
-        online: true
-    }, {
-        id: 6,
-        name: "alexs",
-        surname: "petrenko",
-        colorIcon: "#12284f",
-        online: true
-    }, {
-        id: 7,
-        name: "alexs",
-        surname: "petrenko",
-        colorIcon: "#12284f",
-        online: true
-    }, {
-        id: 8,
-        name: "alexs",
-        surname: "petrenko",
-        colorIcon: "#12284f",
-        online: true
-    },
-]
 
 export interface IUser {
     id: number
@@ -79,7 +26,10 @@ const HomeScreen: FC<IHomeScreen> = ({ navigation }) => {
     const [isLoading, setLoading] = useState(false)
     const [open, setOpen] = useState(false)
     const [selectedUser, setSelectedUser] = useState<IUser>({} as IUser)
-    const {setUserID} = useAuthStore()
+
+    const {userID,setUserID} = useAuth()
+
+    const client = useStreamVideoClient()
 
     const [users, setUsers] =  useState<IUser[]>([])
 
@@ -98,6 +48,19 @@ const HomeScreen: FC<IHomeScreen> = ({ navigation }) => {
     useEffect(()=>{
         fetchUsers()
     },[])
+
+    const onUserCall = ()=>{
+        if (!client) return
+
+        const callID = genRandomString(5);
+        client.call('default', callID).getOrCreate({
+            ring:true,
+            data: {
+                members: [{user_id: userID.toString()}, {user_id: selectedUser.id.toString()}]
+            }
+        })
+        navigation.push('Call')
+    }
 
     return (
         <SafeAreaView className={'h-full'} style={{ backgroundColor: '#e2e8f0' }}>
@@ -146,7 +109,10 @@ const HomeScreen: FC<IHomeScreen> = ({ navigation }) => {
                 open={open}
                 user={selectedUser}
                 onClose={()=>setOpen(false)}
-                onCall={()=>navigation.replace('Call')}
+                onCall={()=> {
+                    onUserCall()
+                    navigation.replace('Call')
+                }}
             />
         </SafeAreaView>
     )

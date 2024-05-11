@@ -6,4 +6,3 @@ class UserDTO(BaseModel):
     name: str
     surname: str
     login: str
-    online: bool

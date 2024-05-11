@@ -10,7 +10,7 @@ import { IRootStackRouter } from "../../router/AppRouter";
 import { useRegisterForm } from "./registerStore";
 import $api from "../../http";
 import * as SecureStore from "expo-secure-store";
-import {useAuthStore} from "../../context/auth/AuthStore";
+import {useAuth} from "../../context/AuthContext";
 
 type IRegisterScreen = NativeStackScreenProps<IRootStackRouter, "Register">
 
@@ -20,7 +20,9 @@ const RegisterScreen: FC<IRegisterScreen> = ({ navigation }) => {
     const { changeState, reset } = useRegisterForm()
 
     const [isLoading, setLoading] = useState(false)
-    const {setUserID} = useAuthStore()
+    const {setUserID} = useAuth()
+
+
     const authHandler = async () => {
         setLoading(true)
         try{
@@ -30,6 +32,7 @@ const RegisterScreen: FC<IRegisterScreen> = ({ navigation }) => {
             SecureStore.setItem('user_id',response.data['user']['id'].toString())
             SecureStore.setItem('access_token',response.data['access_token'])
             SecureStore.setItem('refresh_token', response.data['refresh_token'])
+            SecureStore.setItem('stream_token', response.data['stream_token'])
 
         }catch(e){
             setLoading(false)

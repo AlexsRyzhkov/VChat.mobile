@@ -16,7 +16,6 @@ const Input: FC<IInput> = ({
 }) => {
     return (
         <TextInput
-            showSoftInputOnFocus={false}
             autoCapitalize={'none'}
             placeholder={placeholder}
             value={val}

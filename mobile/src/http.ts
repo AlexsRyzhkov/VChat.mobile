@@ -19,11 +19,15 @@ $api.interceptors.response.use((response) => {
     if (error.response.status === 401 && error.config && !error.config._isRetry) {
         originalRequest._isRetry = true
         try {
-            const response = await axios.get('/refresh', { baseURL: API_URL, withCredentials: true })
+            const response = await axios.get(`/refresh?token=${SecureStore.getItem('refresh_token')}`, { baseURL: API_URL })
             SecureStore.setItem('access_token', response.data.access_token)
+            SecureStore.setItem('refresh_token', response.data.refresh_token)
             return $api.request(originalRequest)
         } catch (e) {
             await SecureStore.deleteItemAsync('access_token')
+            await SecureStore.deleteItemAsync('refresh_token')
+            await SecureStore.deleteItemAsync('stream_token')
+            await SecureStore.deleteItemAsync('user_id')
             console.log('Не авторизован');
         }
     }
