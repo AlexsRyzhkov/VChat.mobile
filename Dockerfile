@@ -2,11 +2,7 @@ FROM python:latest
 
 WORKDIR /backend
 
-COPY ./app /backend/app
-COPY ./main.py /backend/main.py
-COPY ./poetry.lock /backend/poetry
-COPY ./pyproject.toml /backend/pyproject.toml
-COPY ./requirements.txt /backend/requirements.txt
+COPY . /backend/app
 
 RUN pip install -r requirements.txt
 
