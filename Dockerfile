@@ -2,7 +2,7 @@ FROM python:latest
 
 WORKDIR /backend
 
-COPY . /backend/app
+COPY . /backend
 
 RUN pip install -r requirements.txt
 
